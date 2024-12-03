@@ -1,0 +1,15 @@
+{
+    "C_Cpp.errorSquiggles": "disabled",
+    "files.associations": {
+        "psp_api.h": "c",
+        "rtthread.h": "c",
+        "board.h": "c",
+        "appdef.h": "c",
+        "rthw.h": "c",
+        "bsp_timer.h": "c",
+        "drv_timer.h": "c",
+        "bsp_version.h": "c",
+        "shell.h": "c",
+        "finsh.h": "c"
+    }
+}

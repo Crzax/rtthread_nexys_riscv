@@ -1,0 +1,2 @@
+__fsymtab_start
+__fsymtab_end
