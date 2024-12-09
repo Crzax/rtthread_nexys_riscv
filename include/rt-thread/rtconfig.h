@@ -85,6 +85,7 @@
 #define FINSH_USING_MSH
 #define FINSH_USING_MSH_DEFAULT
 #define FINSH_ARG_MAX 10
+#define TEST_MSH
 /* end of Command shell */
 
 /* Device virtual file system */

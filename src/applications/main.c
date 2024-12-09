@@ -35,6 +35,5 @@ int you() {
 }
 
 int main() {
-    you();
     return 0;
 }
