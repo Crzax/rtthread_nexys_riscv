@@ -22,7 +22,7 @@
 #include <rthw.h>
 #include <rtthread.h>
 #include <rtatomic.h>
-
+#include <rtcompiler.h>
 #ifdef RT_USING_SMP
 #define rt_tick rt_cpu_index(0)->tick
 #else
@@ -169,7 +169,7 @@ RTM_EXPORT(rt_tick_from_millisecond);
  *
  * @return   Return passed millisecond from boot.
  */
-RT_WEAK rt_tick_t rt_tick_get_millisecond(void)
+rt_weak rt_tick_t rt_tick_get_millisecond(void)
 {
 #if RT_TICK_PER_SECOND == 0 // make cppcheck happy
 #error "RT_TICK_PER_SECOND must be greater than zero"
