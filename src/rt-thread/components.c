@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2021, RT-Thread Development Team
+ * Copyright (c) 2006-2022, RT-Thread Development Team
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -15,6 +15,7 @@
  *                             in some IDEs.
  * 2015-07-29     Arda.Fu      Add support to use RT_USING_USER_MAIN with IAR
  * 2018-11-22     Jesven       Add secondary cpu boot up
+ * 2023-09-15     xqyjlj       perf rt_hw_interrupt_disable/enable
  */
 
 #include <rthw.h>
@@ -89,7 +90,7 @@ INIT_EXPORT(rti_end, "6.end");
  */
 void rt_components_board_init(void)
 {
-#if RT_DEBUG_INIT
+#ifdef RT_DEBUGING_AUTO_INIT
     int result;
     const struct rt_init_desc *desc;
     for (desc = &__rt_init_desc_rti_board_start; desc < &__rt_init_desc_rti_board_end; desc ++)
@@ -105,7 +106,7 @@ void rt_components_board_init(void)
     {
         (*fn_ptr)();
     }
-#endif /* RT_DEBUG_INIT */
+#endif /* RT_DEBUGING_AUTO_INIT */
 }
 
 /**
@@ -113,7 +114,7 @@ void rt_components_board_init(void)
  */
 void rt_components_init(void)
 {
-#if RT_DEBUG_INIT
+#ifdef RT_DEBUGING_AUTO_INIT
     int result;
     const struct rt_init_desc *desc;
 
@@ -131,7 +132,7 @@ void rt_components_init(void)
     {
         (*fn_ptr)();
     }
-#endif /* RT_DEBUG_INIT */
+#endif /* RT_DEBUGING_AUTO_INIT */
 }
 #endif /* RT_USING_COMPONENTS_INIT */
 
@@ -140,7 +141,6 @@ void rt_components_init(void)
 void rt_application_init(void);
 extern void rt_hw_board_init(void);
 int rtthread_startup(void);
-
 
 #ifdef __ARMCC_VERSION
 extern int $Super$$main(void);
@@ -169,10 +169,11 @@ int entry(void)
     return 0;
 }
 #endif
+
 #ifndef RT_USING_HEAP
 /* if there is not enable heap, we should use static thread and stack. */
-ALIGN(8)
-static rt_uint8_t main_stack[RT_MAIN_THREAD_STACK_SIZE];
+rt_align(RT_ALIGN_SIZE)
+static rt_uint8_t main_thread_stack[RT_MAIN_THREAD_STACK_SIZE];
 struct rt_thread main_thread;
 #endif /* RT_USING_HEAP */
 
@@ -180,10 +181,13 @@ struct rt_thread main_thread;
  * @brief  The system main thread. In this thread will call the rt_components_init()
  *         for initialization of RT-Thread Components and call the user's programming
  *         entry main().
+ *
+ * @param  parameter is the arg of the thread.
  */
-void main_thread_entry(void *parameter)
+static void main_thread_entry(void *parameter)
 {
     extern int main(void);
+    RT_UNUSED(parameter);
 
 #ifdef RT_USING_COMPONENTS_INIT
     /* RT-Thread components initialization */
@@ -199,9 +203,9 @@ void main_thread_entry(void *parameter)
         extern int $Super$$main(void);
         $Super$$main(); /* for ARMCC. */
     }
-#elif defined(__ICCARM__) || defined(__GNUC__) || defined(__TASKING__)
+#elif defined(__ICCARM__) || defined(__GNUC__) || defined(__TASKING__) || defined(__TI_COMPILER_VERSION__)
     main();
-#endif
+#endif /* __ARMCC_VERSION */
 }
 
 /**
@@ -216,13 +220,12 @@ void rt_application_init(void)
     tid = rt_thread_create("main", main_thread_entry, RT_NULL,
                            RT_MAIN_THREAD_STACK_SIZE, RT_MAIN_THREAD_PRIORITY, 20);
     RT_ASSERT(tid != RT_NULL);
-
 #else
     rt_err_t result;
 
     tid = &main_thread;
     result = rt_thread_init(tid, "main", main_thread_entry, RT_NULL,
-                            main_stack, sizeof(main_stack), RT_MAIN_THREAD_PRIORITY, 20);
+                            main_thread_stack, sizeof(main_thread_stack), RT_MAIN_THREAD_PRIORITY, 20);
     RT_ASSERT(result == RT_EOK);
 
     /* if not define RT_USING_HEAP, using to eliminate the warning */
@@ -236,15 +239,19 @@ void rt_application_init(void)
 /**
  * @brief  This function will call all levels of initialization functions to complete
  *         the initialization of the system, and finally start the scheduler.
+ *
+ * @return Normally never returns. If 0 is returned, the scheduler failed.
  */
 int rtthread_startup(void)
 {
-    rt_hw_interrupt_disable();
-
+#ifdef RT_USING_SMP
+    rt_hw_spin_lock_init(&_cpus_lock);
+#endif
+    rt_hw_local_irq_disable();
+    
     /* board level initialization
      * NOTE: please initialize heap inside board initialization.
      */
-    
     rt_hw_board_init();
 
     /* show RT-Thread version */
@@ -274,7 +281,6 @@ int rtthread_startup(void)
     rt_hw_spin_lock(&_cpus_lock);
 #endif /* RT_USING_SMP */
 
-    //rt_hw_timer_init();
     /* start scheduler */
     rt_system_scheduler_start();
 
