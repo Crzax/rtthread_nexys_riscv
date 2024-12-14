@@ -15,15 +15,18 @@
  * 2018-11-22     Jesven       add per cpu tick
  * 2020-12-29     Meco Man     implement rt_tick_get_millisecond()
  * 2021-06-01     Meco Man     add critical section projection for rt_tick_increase()
+ * 2023-09-15     xqyjlj       perf rt_hw_interrupt_disable/enable
+ * 2023-10-16     RiceChen     fix: only the main core detection rt_timer_check(), in SMP mode
  */
 
 #include <rthw.h>
 #include <rtthread.h>
+#include <rtatomic.h>
 
 #ifdef RT_USING_SMP
 #define rt_tick rt_cpu_index(0)->tick
 #else
-static volatile rt_tick_t rt_tick = 0;
+static volatile rt_atomic_t rt_tick = 0;
 #endif /* RT_USING_SMP */
 
 #ifndef __on_rt_tick_hook
@@ -40,7 +43,7 @@ static void (*rt_tick_hook)(void);
 /**@{*/
 
 /**
- * This function will set a hook function, which will be invoked when tick increase
+ * @brief This function will set a hook function, which will be invoked when tick increase
  *
  *
  * @param hook the hook function
@@ -66,7 +69,7 @@ void rt_tick_sethook(void (*hook)(void))
 rt_tick_t rt_tick_get(void)
 {
     /* return the global tick */
-    return rt_tick;
+    return (rt_tick_t)rt_atomic_load(&(rt_tick));
 }
 RTM_EXPORT(rt_tick_get);
 
@@ -77,11 +80,7 @@ RTM_EXPORT(rt_tick_get);
  */
 void rt_tick_set(rt_tick_t tick)
 {
-    rt_base_t level;
-
-    level = rt_hw_interrupt_disable();
-    rt_tick = tick;
-    rt_hw_interrupt_enable(level);
+    rt_atomic_store(&(rt_tick), tick);
 }
 
 /**
@@ -92,18 +91,16 @@ void rt_tick_increase(void)
 {
     struct rt_thread *thread;
     rt_base_t level;
-
     RT_OBJECT_HOOK_CALL(rt_tick_hook, ());
-
-    level = rt_hw_interrupt_disable();
-
     /* increase the global tick */
 #ifdef RT_USING_SMP
-    rt_cpu_self()->tick ++;
+    /* get percpu and increase the tick */
+    rt_atomic_add(&(rt_cpu_self()->tick), 1);
 #else
-    ++ rt_tick;
+    rt_atomic_add(&(rt_tick), 1);
 #endif /* RT_USING_SMP */
-
+#define RT_USING_OLD
+#ifdef RT_USING_OLD
     /* check time slice */
     thread = rt_thread_self();
 
@@ -121,10 +118,17 @@ void rt_tick_increase(void)
     {
         rt_hw_interrupt_enable(level);
     }
-
+#else
+    rt_sched_tick_increase();
+#endif
     /* check timer */
+#ifdef RT_USING_SMP
+    if (rt_hw_cpu_id() != 0)
+    {
+        return;
+    }
+#endif
     rt_timer_check();
-    //rt_kprintf("%d\n",rt_tick);
 }
 
 /**
@@ -167,6 +171,10 @@ RTM_EXPORT(rt_tick_from_millisecond);
  */
 RT_WEAK rt_tick_t rt_tick_get_millisecond(void)
 {
+#if RT_TICK_PER_SECOND == 0 // make cppcheck happy
+#error "RT_TICK_PER_SECOND must be greater than zero"
+#endif
+
 #if 1000 % RT_TICK_PER_SECOND == 0u
     return rt_tick_get() * (1000u / RT_TICK_PER_SECOND);
 #else
@@ -177,4 +185,3 @@ RT_WEAK rt_tick_t rt_tick_get_millisecond(void)
 }
 
 /**@}*/
-
