@@ -24,7 +24,7 @@ int switchLED ( void )
     return(0);
 }
 
-int you() {
+int switch_led() {
     int tid = rt_thread_create("thread_switchLED",
                            switchLED, RT_NULL,
                            THREAD_STACK_SIZE,
@@ -33,6 +33,9 @@ int you() {
     if (tid != RT_NULL);
         rt_thread_startup(tid);
 }
+
+/* 导出到 MSH 命令列表中 */
+MSH_CMD_EXPORT(switch_led, Switch LED according to switches);
 
 int main() {
     return 0;

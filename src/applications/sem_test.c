@@ -59,7 +59,7 @@ void exitApp4(){
             rt_thread_delete(tid2);
             rt_kprintf("成功退出semaphore_sample\n");
             //startApp();
-            resume_appStart();
+            // resume_appStart();
             return;
         }
         rt_thread_delay(100);

@@ -52,7 +52,7 @@ void exitApp9(){
             rt_mp_detach(&mp);
             rt_kprintf("成功退出mempool_sample\n");
             //startApp();
-            resume_appStart();
+            // resume_appStart();
             return;
         }
         rt_thread_delay(100);

@@ -34,7 +34,7 @@ void exitApp2(){
             rt_thread_delete(tid1);
             rt_thread_delete(tid2);
             rt_kprintf("成功退出timeslice_sample\n");
-            resume_appStart();
+            // resume_appStart();
             return;
         }
         rt_thread_delay(100);

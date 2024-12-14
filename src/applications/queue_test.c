@@ -96,7 +96,7 @@ void exitApp7(){
             rt_mq_detach(&mq);
             rt_kprintf("成功退出msgq_sample\n");
             //startApp();
-            resume_appStart();
+            // resume_appStart();
             return;
         }
         rt_thread_delay(100);

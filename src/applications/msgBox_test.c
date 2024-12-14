@@ -72,7 +72,7 @@ void exitApp6(){
             rt_mb_detach(&mb);
             rt_kprintf("成功退出mailbox_sample\n");
             //startApp();
-            resume_appStart();
+            // resume_appStart();
             return;
         }
         rt_thread_delay(100);
