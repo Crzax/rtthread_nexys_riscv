@@ -60,7 +60,11 @@
 #ifndef __on_rt_object_put_hook
     #define __on_rt_object_put_hook(parent)         __ON_HOOK_ARGS(rt_object_put_hook, (parent))
 #endif
+#define DBG_TAG           "kernel.ipc"
+#define DBG_LVL           DBG_INFO
+#include <rtdbg.h>
 
+#define GET_MESSAGEBYTE_ADDR(msg)               ((struct rt_mq_message *) msg + 1)
 #if defined(RT_USING_HOOK) && defined(RT_HOOK_USING_FUNC_PTR)
 extern void (*rt_object_trytake_hook)(struct rt_object *object);
 extern void (*rt_object_take_hook)(struct rt_object *object);
