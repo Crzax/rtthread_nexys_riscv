@@ -60,6 +60,7 @@ void exitApp4(){
             rt_kprintf("成功退出semaphore_sample\n");
             //startApp();
             // resume_appStart();
+            continue_next();
             return;
         }
         rt_thread_delay(100);

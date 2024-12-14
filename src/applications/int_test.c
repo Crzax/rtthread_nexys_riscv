@@ -34,6 +34,7 @@ void exitApp11(){
             rt_kprintf("成功退出dynmem_sample\n");
             //startApp();
             // resume_appStart();
+            continue_next();
             return;
         }
         rt_thread_delay(100);

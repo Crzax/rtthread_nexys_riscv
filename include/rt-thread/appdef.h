@@ -5,6 +5,7 @@
 
 #define LED_SPD_NORMAL          5000
 #define LED_SPD_TASK            2000
+void continue_next(void);
 #ifdef __cplusplus
 int dynmem_sample(void);
 int interrupt_sample(void);

@@ -46,6 +46,7 @@ void exitApp1(){
             rt_kprintf("成功退出thread_sample\n");
             rt_thread_delay(1000);
             // resume_appStart();
+            continue_next();
             return;
         }
         rt_thread_delay(100);

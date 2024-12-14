@@ -32,6 +32,7 @@ void exitApp_LED(){
             rt_kprintf("成功退出LED_SWITCH\n");
             // startApp();
             // resume_appStart();
+            continue_next();
             return;
         }
         rt_thread_delay(100);
@@ -58,6 +59,15 @@ int switch_led() {
         rt_thread_startup(tid_exit);
     return 0;
     
+}
+
+void continue_next(void) {
+    while (1) { 
+        unsigned int value = READ_SW();
+        if (((value >> 15) & 1) == 1 && ((value >> 14) & 1) == 0) {
+            return;
+        }
+    }
 }
 
 /* 导出到 MSH 命令列表中 */

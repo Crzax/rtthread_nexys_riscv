@@ -37,7 +37,7 @@
 #include "board.h"
 #ifdef RT_USING_FINSH
 #include <finsh.h>
-
+#include <appdef.h>
 #define LIST_FIND_OBJ_NR 8
 
 static long clear(void)
@@ -244,8 +244,8 @@ long list_thread(void)
         }
     }
     while (next != (rt_list_t *)RT_NULL);
-    rt_kprintf("list_thread已完成，请更换按钮SW15-14为01回到appStart界面");
-    // resume_resumer();
+    rt_kprintf("list_thread已完成，请更换按钮SW15-14为10回到appStart界面\n");
+    continue_next();
     return 0;
 }
 MSH_CMD_EXPORT(list_thread, list thread);
@@ -263,8 +263,8 @@ static void show_wait_queue(struct rt_list_node *list)
         if (node->next != list)
             rt_kprintf("/");
     }
-    rt_kprintf("show_wait_queue已完成，请更换按钮SW15-14为01回到appStart界面");
-    // resume_resumer();
+    rt_kprintf("show_wait_queue已完成，请更换按钮SW15-14为10回到appStart界面\n");
+    continue_next();
 }
 
 #ifdef RT_USING_SEMAPHORE
@@ -326,8 +326,8 @@ long list_sem(void)
         }
     }
     while (next != (rt_list_t *)RT_NULL);
-    rt_kprintf("list_sem已完成，请更换按钮SW15-14为01回到appStart界面");
-    // resume_resumer();
+    rt_kprintf("list_sem已完成，请更换按钮SW15-14为10回到appStart界面\n");
+    continue_next();
     return 0;
 }
 MSH_CMD_EXPORT(list_sem, list semaphore in system);
@@ -391,8 +391,8 @@ long list_event(void)
         }
     }
     while (next != (rt_list_t *)RT_NULL);
-    rt_kprintf("list_sem已完成，请更换按钮SW15-14为01回到appStart界面");
-    // resume_resumer();
+    rt_kprintf("list_sem已完成，请更换按钮SW15-14为10回到appStart界面\n");
+    continue_next();
     return 0;
 }
 MSH_CMD_EXPORT(list_event, list event in system);
@@ -448,8 +448,8 @@ long list_mutex(void)
         }
     }
     while (next != (rt_list_t *)RT_NULL);
-    rt_kprintf("list_mutex已完成，请更换按钮SW15-14为01回到appStart界面");
-    // resume_resumer();
+    rt_kprintf("list_mutex已完成，请更换按钮SW15-14为10回到appStart界面\n");
+    continue_next();
     return 0;
 }
 MSH_CMD_EXPORT(list_mutex, list mutex in system);
@@ -518,8 +518,8 @@ long list_mailbox(void)
         }
     }
     while (next != (rt_list_t *)RT_NULL);
-    rt_kprintf("list_mailbox已完成，请更换按钮SW15-14为01回到appStart界面");
-    // resume_resumer();
+    rt_kprintf("list_mailbox已完成，请更换按钮SW15-14为10回到appStart界面\n");
+    continue_next();
     return 0;
 }
 MSH_CMD_EXPORT(list_mailbox, list mail box in system);
@@ -584,8 +584,8 @@ long list_msgqueue(void)
         }
     }
     while (next != (rt_list_t *)RT_NULL);
-    rt_kprintf("list_msgqueue已完成，请更换按钮SW15-14为01回到appStart界面");
-    // resume_resumer();
+    rt_kprintf("list_msgqueue已完成，请更换按钮SW15-14为10回到appStart界面\n");
+    continue_next();
     return 0;
 }
 MSH_CMD_EXPORT(list_msgqueue, list message queue in system);
@@ -641,8 +641,8 @@ long list_memheap(void)
         }
     }
     while (next != (rt_list_t *)RT_NULL);
-    rt_kprintf("list_memheap已完成，请更换按钮SW15-14为01回到appStart界面");
-    // resume_resumer();
+    rt_kprintf("list_memheap已完成，请更换按钮SW15-14为10回到appStart界面\n");
+    continue_next();
     return 0;
 }
 MSH_CMD_EXPORT(list_memheap, list memory heap in system);
@@ -720,8 +720,8 @@ long list_mempool(void)
         }
     }
     while (next != (rt_list_t *)RT_NULL);
-    rt_kprintf("list_mempool已完成，请更换按钮SW15-14为01回到appStart界面");
-    // resume_resumer();
+    rt_kprintf("list_mempool已完成，请更换按钮SW15-14为10回到appStart界面\n");
+    continue_next();
     return 0;
 }
 MSH_CMD_EXPORT(list_mempool, list memory pool in system);
@@ -784,8 +784,8 @@ long list_timer(void)
     while (next != (rt_list_t *)RT_NULL);
 
     rt_kprintf("current tick:0x%08x\n", rt_tick_get());
-    rt_kprintf("list_timer已完成，请更换按钮SW15-14为01回到appStart界面");
-    // resume_resumer();
+    rt_kprintf("list_timer已完成，请更换按钮SW15-14为10回到appStart界面\n");
+    continue_next();
     return 0;
 }
 MSH_CMD_EXPORT(list_timer, list timer in system);
@@ -869,8 +869,8 @@ long list_device(void)
         }
     }
     while (next != (rt_list_t *)RT_NULL);
-    rt_kprintf("list_device已完成，请更换按钮SW15-14为01回到appStart界面");
-    // resume_resumer();
+    rt_kprintf("list_device已完成，请更换按钮SW15-14为10回到appStart界面\n");
+    continue_next();
     return 0;
 }
 MSH_CMD_EXPORT(list_device, list device in system);
