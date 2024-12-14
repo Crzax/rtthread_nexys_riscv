@@ -87,7 +87,7 @@ int rt_hw_timer_init(void)
     
     return 0;
 }
-//INIT_BOARD_EXPORT(rt_hw_timer_init);
+INIT_BOARD_EXPORT(rt_hw_timer_init);
 //volatile const init_fn_t *fn_ptr = &__rt_init_rt_hw_timer_init;
 
 void timer_clear_pending(int timer)

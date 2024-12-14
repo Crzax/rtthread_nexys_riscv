@@ -41,6 +41,14 @@
 #include <rtdbg.h>
 #include "bsp_printf.h"
 
+#ifndef __on_rt_realloc_entry_hook
+    #define __on_rt_realloc_entry_hook(ptr, size)    __ON_HOOK_ARGS(rt_realloc_entry_hook, (ptr, size))
+#endif
+
+#ifndef __on_rt_realloc_exit_hook
+    #define __on_rt_realloc_exit_hook(ptr, size)     __ON_HOOK_ARGS(rt_realloc_exit_hook, (ptr, size))
+#endif
+
 #ifdef RT_USING_MODULE
 #include <dlmodule.h>
 #endif /* RT_USING_MODULE */

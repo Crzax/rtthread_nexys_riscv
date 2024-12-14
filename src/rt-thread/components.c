@@ -101,7 +101,7 @@ void rt_components_board_init(void)
     }
 #else
     volatile const init_fn_t *fn_ptr;
-    rt_hw_timer_init();
+    // rt_hw_timer_init();
     for (fn_ptr = &__rt_init_rti_board_start; fn_ptr < &__rt_init_rti_board_end; fn_ptr++)
     {
         (*fn_ptr)();
@@ -233,7 +233,7 @@ void rt_application_init(void)
 #endif /* RT_USING_HEAP */
 
     rt_thread_startup(tid);
-    finsh_system_init();
+    // finsh_system_init();
 }
 
 /**
