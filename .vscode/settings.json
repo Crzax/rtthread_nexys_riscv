@@ -10,6 +10,7 @@
         "drv_timer.h": "c",
         "bsp_version.h": "c",
         "shell.h": "c",
-        "finsh.h": "c"
+        "finsh.h": "c",
+        "rtdbg.h": "c"
     }
 }
