@@ -11,6 +11,8 @@
         "bsp_version.h": "c",
         "shell.h": "c",
         "finsh.h": "c",
-        "rtdbg.h": "c"
+        "rtdbg.h": "c",
+        "typeinfo": "cpp",
+        "rtdebug.h": "c"
     }
 }

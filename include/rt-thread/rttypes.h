@@ -44,6 +44,7 @@ typedef int16_t                         rt_int16_t;     /**< 16bit integer type 
 typedef uint8_t                         rt_uint8_t;     /**<  8bit unsigned integer type */
 typedef uint16_t                        rt_uint16_t;    /**< 16bit unsigned integer type */
 // typedef uint32_t                        rt_uint32_t;    /**< 32bit unsigned integer type */
+typedef unsigned int                    rt_uint32_t;    /**< 32bit unsigned integer type */
 typedef int64_t                         rt_int64_t;     /**< 64bit integer type */
 typedef uint64_t                        rt_uint64_t;    /**< 64bit unsigned integer type */
 #else

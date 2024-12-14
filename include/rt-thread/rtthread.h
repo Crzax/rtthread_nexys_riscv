@@ -26,6 +26,7 @@
 #include <rtdef.h>
 #include <rtservice.h>
 #include <rtm.h>
+#include <rtdbg.h>
 #ifdef RT_USING_LEGACY
 #include <rtlegacy.h>
 #endif
@@ -60,6 +61,7 @@ void rt_object_delete(rt_object_t object);
 rt_bool_t rt_object_is_systemobject(rt_object_t object);
 rt_uint8_t rt_object_get_type(rt_object_t object);
 rt_object_t rt_object_find(const char *name, rt_uint8_t type);
+rt_err_t rt_object_get_name(rt_object_t object, char *name, rt_uint8_t name_size);
 
 #ifdef RT_USING_HOOK
 void rt_object_attach_sethook(void (*hook)(struct rt_object *object));
@@ -147,7 +149,7 @@ rt_thread_t rt_thread_create(const char *name,
                              rt_uint8_t  priority,
                              rt_uint32_t tick);
 rt_err_t rt_thread_delete(rt_thread_t thread);
-#endif
+#endif /* RT_USING_HEAP */
 rt_thread_t rt_thread_self(void);
 rt_thread_t rt_thread_find(char *name);
 rt_err_t rt_thread_startup(rt_thread_t thread);
@@ -157,6 +159,7 @@ rt_err_t rt_thread_delay_until(rt_tick_t *tick, rt_tick_t inc_tick);
 rt_err_t rt_thread_mdelay(rt_int32_t ms);
 rt_err_t rt_thread_control(rt_thread_t thread, int cmd, void *arg);
 rt_err_t rt_thread_suspend(rt_thread_t thread);
+rt_err_t rt_thread_suspend_with_flag(rt_thread_t thread, int suspend_flag);
 rt_err_t rt_thread_resume(rt_thread_t thread);
 
 #ifdef RT_USING_SIGNALS
@@ -190,9 +193,22 @@ void rt_system_scheduler_start(void);
 void rt_schedule(void);
 void rt_schedule_insert_thread(struct rt_thread *thread);
 void rt_schedule_remove_thread(struct rt_thread *thread);
+void rt_scheduler_do_irq_switch(void *context);
 
-void rt_enter_critical(void);
+#ifdef RT_USING_OVERFLOW_CHECK
+void rt_scheduler_stack_check(struct rt_thread *thread);
+
+#define RT_SCHEDULER_STACK_CHECK(thr) rt_scheduler_stack_check(thr)
+
+#else /* !RT_USING_OVERFLOW_CHECK */
+
+#define RT_SCHEDULER_STACK_CHECK(thr)
+
+#endif /* RT_USING_OVERFLOW_CHECK */
+
+rt_base_t rt_enter_critical(void);
 void rt_exit_critical(void);
+void rt_exit_critical_safe(rt_base_t critical_level);
 rt_uint16_t rt_critical_level(void);
 
 #ifdef RT_USING_HOOK
@@ -366,13 +382,28 @@ rt_err_t rt_mutex_detach(rt_mutex_t mutex);
 #ifdef RT_USING_HEAP
 rt_mutex_t rt_mutex_create(const char *name, rt_uint8_t flag);
 rt_err_t rt_mutex_delete(rt_mutex_t mutex);
-#endif
+#endif /* RT_USING_HEAP */
+void rt_mutex_drop_thread(rt_mutex_t mutex, rt_thread_t thread);
+rt_uint8_t rt_mutex_setprioceiling(rt_mutex_t mutex, rt_uint8_t priority);
+rt_uint8_t rt_mutex_getprioceiling(rt_mutex_t mutex);
 
-rt_err_t rt_mutex_take(rt_mutex_t mutex, rt_int32_t time);
+rt_err_t rt_mutex_take(rt_mutex_t mutex, rt_int32_t timeout);
 rt_err_t rt_mutex_trytake(rt_mutex_t mutex);
+rt_err_t rt_mutex_take_interruptible(rt_mutex_t mutex, rt_int32_t time);
+rt_err_t rt_mutex_take_killable(rt_mutex_t mutex, rt_int32_t time);
 rt_err_t rt_mutex_release(rt_mutex_t mutex);
 rt_err_t rt_mutex_control(rt_mutex_t mutex, int cmd, void *arg);
-#endif
+
+rt_inline rt_thread_t rt_mutex_get_owner(rt_mutex_t mutex)
+{
+    return mutex->owner;
+}
+rt_inline rt_ubase_t rt_mutex_get_hold(rt_mutex_t mutex)
+{
+    return mutex->hold;
+}
+
+#endif /* RT_USING_MUTEX */
 
 #ifdef RT_USING_EVENT
 /*
@@ -419,6 +450,10 @@ rt_err_t rt_mb_control(rt_mailbox_t mb, int cmd, void *arg);
 #endif
 
 #ifdef RT_USING_MESSAGEQUEUE
+
+#define RT_MQ_BUF_SIZE(msg_size, max_msgs) \
+((RT_ALIGN((msg_size), RT_ALIGN_SIZE) + sizeof(struct rt_mq_message)) * (max_msgs))
+
 /*
  * message queue interface
  */
@@ -435,20 +470,53 @@ rt_mq_t rt_mq_create(const char *name,
                      rt_size_t   max_msgs,
                      rt_uint8_t  flag);
 rt_err_t rt_mq_delete(rt_mq_t mq);
-#endif
+#endif /* RT_USING_HEAP */
 
 rt_err_t rt_mq_send(rt_mq_t mq, const void *buffer, rt_size_t size);
+rt_err_t rt_mq_send_interruptible(rt_mq_t mq, const void *buffer, rt_size_t size);
+rt_err_t rt_mq_send_killable(rt_mq_t mq, const void *buffer, rt_size_t size);
 rt_err_t rt_mq_send_wait(rt_mq_t     mq,
                          const void *buffer,
                          rt_size_t   size,
                          rt_int32_t  timeout);
+rt_err_t rt_mq_send_wait_interruptible(rt_mq_t     mq,
+                         const void *buffer,
+                         rt_size_t   size,
+                         rt_int32_t  timeout);
+rt_err_t rt_mq_send_wait_killable(rt_mq_t     mq,
+                         const void *buffer,
+                         rt_size_t   size,
+                         rt_int32_t  timeout);
 rt_err_t rt_mq_urgent(rt_mq_t mq, const void *buffer, rt_size_t size);
-rt_err_t rt_mq_recv(rt_mq_t    mq,
+rt_ssize_t rt_mq_recv(rt_mq_t    mq,
+                    void      *buffer,
+                    rt_size_t  size,
+                    rt_int32_t timeout);
+rt_ssize_t rt_mq_recv_interruptible(rt_mq_t    mq,
+                    void      *buffer,
+                    rt_size_t  size,
+                    rt_int32_t timeout);
+rt_ssize_t rt_mq_recv_killable(rt_mq_t    mq,
                     void      *buffer,
                     rt_size_t  size,
                     rt_int32_t timeout);
 rt_err_t rt_mq_control(rt_mq_t mq, int cmd, void *arg);
-#endif
+
+#ifdef RT_USING_MESSAGEQUEUE_PRIORITY
+rt_err_t rt_mq_send_wait_prio(rt_mq_t mq,
+                              const void *buffer,
+                              rt_size_t size,
+                              rt_int32_t prio,
+                              rt_int32_t timeout,
+                              int suspend_flag);
+rt_ssize_t rt_mq_recv_prio(rt_mq_t mq,
+                           void *buffer,
+                           rt_size_t size,
+                           rt_int32_t *prio,
+                           rt_int32_t timeout,
+                           int suspend_flag);
+#endif /* RT_USING_MESSAGEQUEUE_PRIORITY */
+#endif /* RT_USING_MESSAGEQUEUE */
 
 /* defunct */
 void rt_thread_defunct_enqueue(rt_thread_t thread);
