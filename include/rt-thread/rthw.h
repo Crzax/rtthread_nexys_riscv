@@ -12,6 +12,9 @@
  * 2017-10-17     Hichard      add some macros
  * 2018-11-17     Jesven       add rt_hw_spinlock_t
  *                             add smp support
+ * 2019-05-18     Bernard      add empty definition for not enable cache case
+ * 2023-09-15     xqyjlj       perf rt_hw_interrupt_disable/enable
+ * 2023-10-16     Shell        Support a new backtrace framework
  */
 
 #ifndef __RT_HW_H__

@@ -16,6 +16,13 @@
  * 2018-11-22     Jesven       add all cpu's lock and ipi handler
  * 2021-02-28     Meco Man     add RT_KSERVICE_USING_STDLIB
  * 2021-11-14     Meco Man     add rtlegacy.h for compatibility
+ * 2022-06-04     Meco Man     remove strnlen
+ * 2023-05-20     Bernard      add rtatomic.h header file to included files.
+ * 2023-06-30     ChuShicheng  move debug check from the rtdebug.h
+ * 2023-10-16     Shell        Support a new backtrace framework
+ * 2023-12-10     xqyjlj       fix spinlock in up
+ * 2024-01-25     Shell        Add rt_susp_list for IPC primitives
+ * 2024-03-10     Meco Man     move std libc related functions to rtklibc
  */
 
 #ifndef __RT_THREAD_H__
