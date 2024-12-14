@@ -47,9 +47,6 @@ int msh_help(int argc, char **argv)
             rt_kprintf("%s ", index->name);
 #endif
         }
-#if defined(TEST_MSH)
-        rt_kprintf("%-16s - %s\n", "test", "ZhenxiongChen test command.");
-#endif
     }
     rt_kprintf("\n");
 
@@ -328,9 +325,7 @@ static int _msh_exec_lwp(char *cmd, rt_size_t length)
     return 0;
 }
 #endif /* defined(RT_USING_LWP) && defined(DFS_USING_POSIX) */
-#if defined(TEST_MSH)
-extern int you(void);
-#endif
+
 int msh_exec(char *cmd, rt_size_t length)
 {
     int cmd_ret;
@@ -344,13 +339,6 @@ int msh_exec(char *cmd, rt_size_t length)
 
     if (length == 0)
         return 0;
-#if defined(TEST_MSH)
-    if (length == 4 && strncmp(cmd, "test", 4) == 0)
-    {
-        you();
-        return 0; // 或者返回相应的执行结果
-    }
-#endif
     /* Exec sequence:
      * 1. built-in command
      * 2. module(if enabled)

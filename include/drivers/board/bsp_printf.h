@@ -24,10 +24,11 @@
 #define __BSP_PRINTF_H__
 
 #include "psp_types.h"
-
+#include <stdarg.h>
 u32_t  printfNexys(const char * cFormat, ... );
 void   uartInit(void);
 void   printfSetUartStatus(u08_t ucStatus);
+int    uart_printf(const char* ctrl1, va_list argp);
 u08_t  printfGetUartStatus(void);
 
 #endif //__BSP_PRINTF_H__

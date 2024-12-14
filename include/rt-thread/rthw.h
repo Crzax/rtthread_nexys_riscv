@@ -126,6 +126,18 @@ void rt_hw_context_switch_to(rt_ubase_t to);
 void rt_hw_context_switch_interrupt(rt_ubase_t from, rt_ubase_t to);
 #endif /*RT_USING_SMP*/
 
+/**
+ * Hardware Layer Backtrace Service
+ */
+struct rt_hw_backtrace_frame {
+    rt_base_t fp;
+    rt_base_t pc;
+};
+
+rt_err_t rt_hw_backtrace_frame_get(rt_thread_t thread, struct rt_hw_backtrace_frame *frame);
+
+rt_err_t rt_hw_backtrace_frame_unwind(rt_thread_t thread, struct rt_hw_backtrace_frame *frame);
+
 void rt_hw_console_output(const char *str);
 
 void rt_hw_backtrace(rt_uint32_t *fp, rt_ubase_t thread_entry);

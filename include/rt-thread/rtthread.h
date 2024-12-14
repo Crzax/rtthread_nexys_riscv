@@ -27,6 +27,7 @@
 #include <rtservice.h>
 #include <rtm.h>
 #include <rtdbg.h>
+#include <rthw.h>
 #ifdef RT_USING_LEGACY
 #include <rtlegacy.h>
 #endif
@@ -295,8 +296,8 @@ void rt_page_free(void *addr, rt_size_t npages);
 #endif
 
 #ifdef RT_USING_HOOK
-void rt_malloc_sethook(void (*hook)(void *ptr, rt_size_t size));
-void rt_free_sethook(void (*hook)(void *ptr));
+void rt_malloc_sethook(void (*hook)(void **ptr, rt_size_t size));
+void rt_free_sethook(void (*hook)(void **ptr));
 #endif
 
 #endif
@@ -650,6 +651,10 @@ int rt_vsprintf(char *dest, const char *format, va_list arg_ptr);
 int rt_vsnprintf(char *buf, rt_size_t size, const char *fmt, va_list args);
 int rt_sprintf(char *buf, const char *format, ...);
 int rt_snprintf(char *buf, rt_size_t size, const char *format, ...);
+
+rt_err_t rt_backtrace(void);
+rt_err_t rt_backtrace_thread(rt_thread_t thread);
+rt_err_t rt_backtrace_frame(struct rt_hw_backtrace_frame *frame);
 
 #if defined(RT_USING_DEVICE) && defined(RT_USING_CONSOLE)
 rt_device_t rt_console_set_device(const char *name);

@@ -22,6 +22,7 @@
 #define RT_TIMER_THREAD_PRIO 4
 #define RT_TIMER_THREAD_STACK_SIZE 1024
 #define RT_DEBUG
+#define RT_USING_DEBUG
 #define RT_DEBUG_COLOR
 #define __RT_KERNEL_SOURCE__
 
@@ -54,7 +55,8 @@
 #define RT_CONSOLEBUF_SIZE 256
 #define RT_CONSOLE_DEVICE_NAME "uart0"
 /* end of Kernel Device Object */
-#define RT_VER_NUM 0x40002
+#define RT_VER_NUM 0x50100
+#define RT_BACKTRACE_LEVEL_MAX_NR 32
 /* end of RT-Thread Kernel */
 #define ARCH_ARM
 #define ARCH_ARM_CORTEX_A
@@ -86,7 +88,6 @@
 #define FINSH_USING_MSH
 #define FINSH_USING_MSH_DEFAULT
 #define FINSH_ARG_MAX 10
-#define TEST_MSH
 /* end of Command shell */
 
 /* Device virtual file system */

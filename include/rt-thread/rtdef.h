@@ -78,9 +78,9 @@ extern "C" {
 /**@{*/
 
 /* RT-Thread version information */
-#define RT_VERSION                      4L              /**< major version number */
-#define RT_SUBVERSION                   1L              /**< minor version number */
-#define RT_REVISION                     0L              /**< revise version number */
+#define RT_VERSION_MAJOR                5               /**< Major version number (X.x.x) */
+#define RT_VERSION_MINOR                1               /**< Minor version number (x.X.x) */
+#define RT_VERSION_PATCH                0               /**< Patch version number (x.x.X) */
 
 /* RT-Thread version */
 #define RTTHREAD_VERSION                ((RT_VERSION * 10000) + \
@@ -323,17 +323,48 @@ typedef int (*init_fn_t)(void);
 /**@{*/
 
 /* RT-Thread error code definitions */
+#if defined(RT_USING_LIBC) && !defined(RT_USING_NANO)
+/* POSIX error code compatible */
 #define RT_EOK                          0               /**< There is no error */
-#define RT_ERROR                        1               /**< A generic error happens */
+#define RT_ERROR                        255             /**< A generic/unknown error happens */
+#define RT_ETIMEOUT                     ETIMEDOUT       /**< Timed out */
+#define RT_EFULL                        ENOSPC          /**< The resource is full */
+#define RT_EEMPTY                       ENODATA         /**< The resource is empty */
+#define RT_ENOMEM                       ENOMEM          /**< No memory */
+#define RT_ENOSYS                       ENOSYS          /**< Function not implemented */
+#define RT_EBUSY                        EBUSY           /**< Busy */
+#define RT_EIO                          EIO             /**< IO error */
+#define RT_EINTR                        EINTR           /**< Interrupted system call */
+#define RT_EINVAL                       EINVAL          /**< Invalid argument */
+#define RT_ENOENT                       ENOENT          /**< No entry */
+#define RT_ENOSPC                       ENOSPC          /**< No space left */
+#define RT_EPERM                        EPERM           /**< Operation not permitted */
+#define RT_EFAULT                       EFAULT          /**< Bad address */
+#define RT_ENOBUFS                      ENOBUFS         /**< No buffer space is available */
+#define RT_ESCHEDISR                    253             /**< scheduler failure in isr context */
+#define RT_ESCHEDLOCKED                 252             /**< scheduler failure in critical region */
+#define RT_ETRAP                        254             /**< Trap event */
+#else
+#define RT_EOK                          0               /**< There is no error */
+#define RT_ERROR                        1               /**< A generic/unknown error happens */
 #define RT_ETIMEOUT                     2               /**< Timed out */
 #define RT_EFULL                        3               /**< The resource is full */
 #define RT_EEMPTY                       4               /**< The resource is empty */
 #define RT_ENOMEM                       5               /**< No memory */
-#define RT_ENOSYS                       6               /**< No system */
+#define RT_ENOSYS                       6               /**< Function not implemented */
 #define RT_EBUSY                        7               /**< Busy */
 #define RT_EIO                          8               /**< IO error */
 #define RT_EINTR                        9               /**< Interrupted system call */
 #define RT_EINVAL                       10              /**< Invalid argument */
+#define RT_ENOENT                       11              /**< No entry */
+#define RT_ENOSPC                       12              /**< No space left */
+#define RT_EPERM                        13              /**< Operation not permitted */
+#define RT_ETRAP                        14              /**< Trap event */
+#define RT_EFAULT                       15              /**< Bad address */
+#define RT_ENOBUFS                      16              /**< No buffer space is available */
+#define RT_ESCHEDISR                    17              /**< scheduler failure in isr context */
+#define RT_ESCHEDLOCKED                 18              /**< scheduler failure in critical region */
+#endif /* defined(RT_USING_LIBC) && !defined(RT_USING_NANO) */
 
 /**@}*/
 
