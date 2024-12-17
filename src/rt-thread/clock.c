@@ -22,7 +22,7 @@
 #include <rthw.h>
 #include <rtthread.h>
 #include <rtatomic.h>
-#include <rtcompiler.h>
+
 #ifdef RT_USING_SMP
 #define rt_tick rt_cpu_index(0)->tick
 #else
@@ -89,8 +89,8 @@ void rt_tick_set(rt_tick_t tick)
  */
 void rt_tick_increase(void)
 {
-    struct rt_thread *thread;
-    rt_base_t level;
+    RT_ASSERT(rt_interrupt_get_nest() > 0);
+
     RT_OBJECT_HOOK_CALL(rt_tick_hook, ());
     /* increase the global tick */
 #ifdef RT_USING_SMP
@@ -99,28 +99,10 @@ void rt_tick_increase(void)
 #else
     rt_atomic_add(&(rt_tick), 1);
 #endif /* RT_USING_SMP */
-// #define RT_USING_OLD
-#ifdef RT_USING_OLD
+
     /* check time slice */
-    thread = rt_thread_self();
-
-    -- thread->remaining_tick;
-    if (thread->remaining_tick == 0)
-    {
-        /* change to initialized tick */
-        thread->remaining_tick = thread->init_tick;
-        thread->stat |= RT_THREAD_STAT_YIELD;
-
-        rt_hw_interrupt_enable(level);
-        rt_schedule();
-    }
-    else
-    {
-        rt_hw_interrupt_enable(level);
-    }
-#else
     rt_sched_tick_increase();
-#endif
+
     /* check timer */
 #ifdef RT_USING_SMP
     if (rt_hw_cpu_id() != 0)

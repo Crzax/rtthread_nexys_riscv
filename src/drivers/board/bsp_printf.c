@@ -464,7 +464,7 @@ u32_t printfNexys( const char * cFormat, ... )
      va_end( argp);
   }
 
-  printUartPutchar('\n');
+  // printUartPutchar('\n');
 
   return uiRes;
 }

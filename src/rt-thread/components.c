@@ -20,11 +20,6 @@
 
 #include <rthw.h>
 #include <rtthread.h>
-#include "components.h" 
-//#include "demo_platform_al.h"
-#include "board.h"
-#include "drv_timer.h"
-#include "shell.h"
 
 #ifdef RT_USING_USER_MAIN
 #ifndef RT_MAIN_THREAD_STACK_SIZE
@@ -101,7 +96,7 @@ void rt_components_board_init(void)
     }
 #else
     volatile const init_fn_t *fn_ptr;
-    // rt_hw_timer_init();
+
     for (fn_ptr = &__rt_init_rti_board_start; fn_ptr < &__rt_init_rti_board_end; fn_ptr++)
     {
         (*fn_ptr)();
@@ -139,7 +134,7 @@ void rt_components_init(void)
 #ifdef RT_USING_USER_MAIN
 
 void rt_application_init(void);
-extern void rt_hw_board_init(void);
+void rt_hw_board_init(void);
 int rtthread_startup(void);
 
 #ifdef __ARMCC_VERSION
@@ -151,7 +146,6 @@ int $Sub$$main(void)
     return 0;
 }
 #elif defined(__ICCARM__)
-extern int main(void);
 /* __low_level_init will auto called by IAR cstartup */
 extern void __iar_data_init3(void);
 int __low_level_init(void)
@@ -233,7 +227,6 @@ void rt_application_init(void)
 #endif /* RT_USING_HEAP */
 
     rt_thread_startup(tid);
-    // finsh_system_init();
 }
 
 /**
@@ -248,7 +241,7 @@ int rtthread_startup(void)
     rt_hw_spin_lock_init(&_cpus_lock);
 #endif
     rt_hw_local_irq_disable();
-    
+
     /* board level initialization
      * NOTE: please initialize heap inside board initialization.
      */

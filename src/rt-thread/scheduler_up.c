@@ -34,7 +34,7 @@
 
 #include <rtthread.h>
 #include <rthw.h>
-#include <rtsched.h>
+
 #define DBG_TAG           "kernel.scheduler"
 #define DBG_LVL           DBG_INFO
 #include <rtdbg.h>
@@ -46,12 +46,10 @@ rt_uint32_t rt_thread_ready_priority_group;
 rt_uint8_t rt_thread_ready_table[32];
 #endif /* RT_THREAD_PRIORITY_MAX > 32 */
 
-#ifndef RT_USING_SMP
 extern volatile rt_uint8_t rt_interrupt_nest;
 static rt_int16_t rt_scheduler_lock_nest;
 struct rt_thread *rt_current_thread = RT_NULL;
 rt_uint8_t rt_current_priority;
-#endif /* RT_USING_SMP */
 
 #ifndef __on_rt_scheduler_hook
     #define __on_rt_scheduler_hook(from, to)        __ON_HOOK_ARGS(rt_scheduler_hook, (from, to))
@@ -312,14 +310,9 @@ void rt_schedule(void)
                 else
                 {
                     LOG_D("switch in interrupt");
-// #define RT_USING_OLD
-#ifdef RT_USING_OLD
-                    rt_hw_context_switch_interrupt((rt_ubase_t)&from_thread->sp,
-                            (rt_ubase_t)&to_thread->sp);
-#else
+
                     rt_hw_context_switch_interrupt((rt_ubase_t)&from_thread->sp,
                             (rt_ubase_t)&to_thread->sp, from_thread, to_thread);
-#endif
                 }
             }
             else

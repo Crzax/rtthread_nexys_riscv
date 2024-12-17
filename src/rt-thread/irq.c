@@ -18,8 +18,7 @@
 
 #include <rthw.h>
 #include <rtthread.h>
-#include <rtatomic.h>
-#include <rtcompiler.h>
+
 #define DBG_TAG           "kernel.irq"
 #define DBG_LVL           DBG_INFO
 #include <rtdbg.h>

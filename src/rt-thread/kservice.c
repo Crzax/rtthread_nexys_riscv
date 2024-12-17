@@ -322,8 +322,7 @@ RTM_EXPORT(rt_console_set_device);
 
 rt_weak void rt_hw_console_output(const char *str)
 {
-    /* empty console output */
-    RT_UNUSED(str);
+    printfNexys(str);
 }
 RTM_EXPORT(rt_hw_console_output);
 
@@ -465,42 +464,34 @@ void rt_kputs(const char *str)
  *
  * @return The number of characters actually written to buffer.
  */
-int rt_kprintf(const char *fmt, ...){
-    // va_list args;
-    // va_start(args, fmt);
-    // printfNexys(fmt,args);
-    // va_end(args);
-    u32_t uiRes = 0;
-    va_list argp;
+rt_weak int rt_kprintf(const char *fmt, ...)
+{
+    va_list args;
+    rt_size_t length = 0;
+    static char rt_log_buf[RT_CONSOLEBUF_SIZE];
 
-    if (fmt)
+    va_start(args, fmt);
+    PRINTF_BUFFER_TAKE;
+
+    /* the return value of vsnprintf is the number of bytes that would be
+     * written to buffer had if the size of the buffer been sufficiently
+     * large excluding the terminating null byte. If the output string
+     * would be larger than the rt_log_buf, we have to adjust the output
+     * length. */
+    length = rt_vsnprintf(rt_log_buf, sizeof(rt_log_buf) - 1, fmt, args);
+    if (length > RT_CONSOLEBUF_SIZE - 1)
     {
-        va_start( argp, fmt);
-        // Setup target to be stdout function
-        uiRes = uart_printf( fmt, argp);
-        va_end( argp);
+        length = RT_CONSOLEBUF_SIZE - 1;
     }
 
-    // printUartPutchar('\n');
+    _kputs(rt_log_buf, length);
 
-    return uiRes;
+    PRINTF_BUFFER_RELEASE;
+    va_end(args);
+
+    return length;
 }
 RTM_EXPORT(rt_kprintf);
-
-int rt_kprintf_withoutn(const char *fmt, ...){
-    u32_t uiRes = 0;
-    va_list argp;
-
-    if (fmt)
-    {
-        va_start( argp, fmt);
-        // Setup target to be stdout function
-        uiRes = uart_printf( fmt, argp);
-        va_end( argp);
-    }
-
-    return uiRes;
-}
 #endif /* RT_USING_CONSOLE */
 
 #ifdef __GNUC__

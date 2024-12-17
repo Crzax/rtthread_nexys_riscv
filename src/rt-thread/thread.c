@@ -40,7 +40,9 @@
 #include <rthw.h>
 #include <rtthread.h>
 #include <stddef.h>
-#include <rtsched.h>
+
+#define DBG_TAG           "kernel.thread"
+#define DBG_LVL           DBG_INFO
 #include <rtdbg.h>
 
 #ifndef __on_rt_thread_inited_hook
@@ -56,7 +58,6 @@
 #if defined(RT_USING_HOOK) && defined(RT_HOOK_USING_FUNC_PTR)
 static void (*rt_thread_suspend_hook)(rt_thread_t thread);
 static void (*rt_thread_resume_hook) (rt_thread_t thread);
-static void (*rt_thread_inited_hook) (rt_thread_t thread);
 
 /**
  * @brief   This function sets a hook function when the system suspend a thread.
@@ -610,7 +611,7 @@ static rt_err_t _thread_sleep(rt_tick_t tick)
 {
     struct rt_thread *thread;
     rt_base_t critical_level;
-    rt_err_t err;
+    int err;
 
     if (tick == 0)
     {
