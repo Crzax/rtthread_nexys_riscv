@@ -488,6 +488,7 @@ struct rt_object_information
     enum rt_object_class_type type;                     /**< object class type */
     rt_list_t                 object_list;              /**< object list */
     rt_size_t                 object_size;              /**< object size */
+    struct rt_spinlock        spinlock;
 };
 
 /**
@@ -678,6 +679,11 @@ struct rt_object_information
 #ifndef RT_TIMER_SKIP_LIST_MASK
 #define RT_TIMER_SKIP_LIST_MASK         0x3             /**< Timer skips the list mask */
 #endif
+
+/**
+ * timeout handler of rt_timer
+ */
+typedef void (*rt_timer_func_t)(void *parameter);
 
 /**
  * timer structure
