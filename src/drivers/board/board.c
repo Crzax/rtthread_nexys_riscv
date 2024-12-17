@@ -19,7 +19,7 @@
 void hw_board_init(char *clock_src, int32_t clock_src_freq, int32_t clock_target_freq);
 void UartInit(void);
 char heap[500*1024];
-RT_WEAK void rt_hw_board_init()
+rt_weak void rt_hw_board_init()
 {
 #if defined(RT_USING_HEAP)
     rt_system_heap_init(heap, heap+500*1024);

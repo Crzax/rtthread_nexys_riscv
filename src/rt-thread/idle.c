@@ -23,7 +23,6 @@
 
 #include <rthw.h>
 #include <rtthread.h>
-#include <rtsched.h>
 
 #ifdef RT_USING_MODULE
 #include <dlmodule.h>
@@ -44,11 +43,11 @@
 #endif /* IDLE_THREAD_STACK_SIZE */
 
 #define _CPUS_NR                RT_CPUS_NR
-#define RT_USING_OLD
+
 static rt_list_t _rt_thread_defunct = RT_LIST_OBJECT_INIT(_rt_thread_defunct);
 static struct rt_spinlock _defunct_spinlock;
 static struct rt_thread idle_thread[_CPUS_NR];
-ALIGN(RT_ALIGN_SIZE)
+rt_align(RT_ALIGN_SIZE)
 static rt_uint8_t idle_thread_stack[_CPUS_NR][IDLE_THREAD_STACK_SIZE];
 
 #ifdef RT_USING_SMP
@@ -207,7 +206,7 @@ static void rt_defunct_execute(void)
         }
 
 #ifdef RT_USING_MODULE
-        module = (struct rt_dlmodule*)thread->module_id;
+        module = (struct rt_dlmodule*)thread->parent.module_id;
         if (module)
         {
             dlmodule_destroy(module);

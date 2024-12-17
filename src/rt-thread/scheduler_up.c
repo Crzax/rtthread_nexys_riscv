@@ -312,7 +312,7 @@ void rt_schedule(void)
                 else
                 {
                     LOG_D("switch in interrupt");
-#define RT_USING_OLD
+// #define RT_USING_OLD
 #ifdef RT_USING_OLD
                     rt_hw_context_switch_interrupt((rt_ubase_t)&from_thread->sp,
                             (rt_ubase_t)&to_thread->sp);

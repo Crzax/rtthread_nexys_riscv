@@ -9,9 +9,7 @@ static struct rt_messagequeue mq;
 /* 消息队列中用到的放置消息的内存池 */
 static rt_uint8_t msg_pool[2048];
 
-ALIGN(RT_ALIGN_SIZE)
-static char thread1_stack[1024];
-static struct rt_thread thread1;
+rt_align(RT_ALIGN_SIZE)
 /* 线程 1 入口函数 */
 static void thread1_entry(void *parameter)
 {
@@ -37,9 +35,7 @@ static void thread1_entry(void *parameter)
     //rt_mq_detach(&mq);
 }
 
-ALIGN(RT_ALIGN_SIZE)
-static char thread2_stack[1024];
-static struct rt_thread thread2;
+rt_align(RT_ALIGN_SIZE)
 /* 线程 2 入口 */
 static void thread2_entry(void *parameter)
 {

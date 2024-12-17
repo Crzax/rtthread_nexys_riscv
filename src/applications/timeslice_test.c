@@ -10,7 +10,6 @@ static void thread_entry(void* parameter)
 {
     rt_uint32_t value;
     rt_uint32_t count = 0;
-    rt_base_t level;
 
     value = (rt_uint32_t)parameter;
     while (1)

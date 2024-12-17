@@ -18,9 +18,7 @@ static void thread1_entry(void *parameter)
     }
 }
 
-ALIGN(RT_ALIGN_SIZE)
-static char thread2_stack[1024];
-static struct rt_thread thread2;
+rt_align(RT_ALIGN_SIZE)
 /* 线程 2 入口 */
 static void thread2_entry(void *param)
 {
