@@ -924,6 +924,7 @@ struct rt_thread
     rt_ubase_t                  user_data;              /**< private user data beyond this thread */
 };
 typedef struct rt_thread *rt_thread_t;
+#undef RT_USING_OLD
 
 /**@}*/
 
@@ -975,6 +976,7 @@ struct rt_semaphore
 };
 typedef struct rt_semaphore *rt_sem_t;
 #endif
+#undef RT_USING_OLD
 
 #ifdef RT_USING_MUTEX
 /**
@@ -1000,6 +1002,7 @@ struct rt_mutex
 };
 typedef struct rt_mutex *rt_mutex_t;
 #endif
+#undef RT_USING_OLD
 
 #ifdef RT_USING_EVENT
 /**
@@ -1067,6 +1070,7 @@ struct rt_messagequeue
 };
 typedef struct rt_messagequeue *rt_mq_t;
 #endif  /* RT_USING_OLD */
+#undef RT_USING_OLD
 
 struct rt_mq_message
 {

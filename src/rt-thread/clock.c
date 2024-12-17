@@ -99,7 +99,7 @@ void rt_tick_increase(void)
 #else
     rt_atomic_add(&(rt_tick), 1);
 #endif /* RT_USING_SMP */
-#define RT_USING_OLD
+// #define RT_USING_OLD
 #ifdef RT_USING_OLD
     /* check time slice */
     thread = rt_thread_self();

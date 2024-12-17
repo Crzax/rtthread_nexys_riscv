@@ -61,14 +61,5 @@ int switch_led() {
     
 }
 
-void continue_next(void) {
-    while (1) { 
-        unsigned int value = READ_SW();
-        if (((value >> 15) & 1) == 1 && ((value >> 14) & 1) == 0) {
-            return;
-        }
-    }
-}
-
 /* 导出到 MSH 命令列表中 */
 MSH_CMD_EXPORT(switch_led, Switch LED according to switches);
