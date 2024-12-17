@@ -1,41 +1,21 @@
-/*
- * Copyright (c) 2006-2021, RT-Thread Development Team
- *
- * SPDX-License-Identifier: Apache-2.0
- *
- * Change Logs:
- * Date           Author       Notes
- * 2018/10/28     Bernard      The unify RISC-V porting code.
- */
-
 #include <rthw.h>
 #include <rtthread.h>
 #include <stdint.h>
 #include "tick.h"
-//#include <riscv_io.h>
-//#include <encoding.h>
-
-#define VIRT_CLINT_TIMEBASE_FREQ    (10000000)
-
-static volatile uint64_t time_elapsed = 0;
-static volatile unsigned long tick_cycles = 0;
-
-static uint64_t get_ticks()
-{
-    __asm__ __volatile__(
-        "rdtime %0"
-        : "=r"(time_elapsed));
-    return time_elapsed;
-}
+#include <psp_attributes.h>
+#include <psp_types.h>
+#define CLOCK_RATE (D_CLOCK_RATE)
+D_PSP_TEXT_SECTION void pspTimerSetupMachineTimer(u32_t uiPeriodCycles);
 
 int tick_isr(void)
 {
-    int tick_cycles = VIRT_CLINT_TIMEBASE_FREQ / RT_TICK_PER_SECOND;
+    int tick_cycles = CLOCK_RATE / RT_TICK_PER_SECOND;
     rt_tick_increase();
+
 #ifdef RISCV_S_MODE
-    sbi_set_timer(get_ticks() + tick_cycles);
+    sbi_set_timer(pspTimerCounterGet(E_MACHINE_TIMER) + tick_cycles);
 #else
-    *(uint64_t*)CLINT_MTIMECMP(__raw_hartid()) = *(uint64_t*)CLINT_MTIME + tick_cycles;
+    pspTimerSetupMachineTimer(tick_cycles);  // 使用现有的定时器设置函数
 #endif
 
     return 0;
@@ -44,25 +24,15 @@ int tick_isr(void)
 /* Sets and enable the timer interrupt */
 int rt_hw_tick_init(void)
 {
-    unsigned long interval = VIRT_CLINT_TIMEBASE_FREQ / RT_TICK_PER_SECOND;
+    unsigned long interval = CLOCK_RATE / RT_TICK_PER_SECOND;
 
 #ifdef RISCV_S_MODE
-    /* Clear the Supervisor-Timer bit in SIE */
     clear_csr(sie, SIP_STIP);
-
-    /* calculate the tick cycles */
-    // tick_cycles = interval * sysctl_clock_get_freq(SYSCTL_CLOCK_CPU) / CLINT_CLOCK_DIV / 1000ULL - 1;
-    tick_cycles = 40000;
-    /* Set timer */
-    sbi_set_timer(get_ticks() + tick_cycles);
-
-    /* Enable the Supervisor-Timer bit in SIE */
+    sbi_set_timer(pspTimerCounterGet(E_MACHINE_TIMER) + interval);
     set_csr(sie, SIP_STIP);
 #else
-    //clear_csr(mie, MIP_MTIP);
-    //clear_csr(mip, MIP_MTIP);
-    *(uint64_t*)CLINT_MTIMECMP(__raw_hartid()) = *(uint64_t*)CLINT_MTIME + interval;
-    //set_csr(mie, MIP_MTIP);
+    pspTimerSetupMachineTimer(interval);  // 使用现有的定时器设置函数
 #endif
+
     return 0;
 }

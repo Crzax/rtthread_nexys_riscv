@@ -22,6 +22,8 @@
         "components.h": "c",
         "interrupt.h": "c",
         "stdint.h": "c",
-        "psp_types.h": "c"
+        "psp_types.h": "c",
+        "psp_attributes.h": "c",
+        "bsp_external_interrupts.h": "c"
     }
 }

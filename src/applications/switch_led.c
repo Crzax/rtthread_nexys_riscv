@@ -8,7 +8,7 @@
 #define WRITE_GPIO(dir, value) { (*(volatile unsigned *)dir) = (value); }
 
 static rt_thread_t tid = RT_NULL;
-int switchLED ( void *parameter )
+void switchLED (void *parameter)
 {
     int En_Value=0xFFFF, switches_value;
 
@@ -21,7 +21,6 @@ int switchLED ( void *parameter )
         rt_thread_mdelay(100);
     }
 
-    return(0);
 }
 static rt_thread_t tid_exit = RT_NULL;
 void exitApp_LED(void *parameter){
@@ -38,7 +37,7 @@ void exitApp_LED(void *parameter){
     }
 }
 int switch_led() {
-    tid = rt_thread_create("thread_switchLED",
+    tid = rt_thread_create("switchLED",
                            switchLED, RT_NULL,
                            THREAD_STACK_SIZE,
                            THREAD_PRIORITY,
