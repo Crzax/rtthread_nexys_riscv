@@ -16,6 +16,12 @@
         "rtdebug.h": "c",
         "bsp_printf.h": "c",
         "bsp_mem_map.h": "c",
-        "type_traits": "cpp"
+        "type_traits": "cpp",
+        "tick.h": "c",
+        "psp_interrupts_eh1.h": "c",
+        "components.h": "c",
+        "interrupt.h": "c",
+        "stdint.h": "c",
+        "psp_types.h": "c"
     }
 }

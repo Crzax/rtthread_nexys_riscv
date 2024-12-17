@@ -30,7 +30,7 @@ void thread1_entry(void *parameter)
     }
 }
 static rt_thread_t tid_exit = RT_NULL;
-void exitApp10(){
+void exitApp10(void *parameter){
     while(1){
         if(READ_SW()>>14==1){
             rt_kprintf("准备退出dynmem_sample\n");

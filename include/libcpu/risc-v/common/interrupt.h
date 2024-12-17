@@ -12,7 +12,7 @@
 #define INTERRUPT_H__
 
 #include <rthw.h>
-#include "stack.h"
+#include "rt_hw_stack_frame.h"
 
 int rt_hw_clint_ipi_enable(void);
 int rt_hw_clint_ipi_disable(void);

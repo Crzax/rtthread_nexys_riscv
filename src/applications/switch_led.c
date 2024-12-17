@@ -8,7 +8,7 @@
 #define WRITE_GPIO(dir, value) { (*(volatile unsigned *)dir) = (value); }
 
 static rt_thread_t tid = RT_NULL;
-int switchLED ( void )
+int switchLED ( void *parameter )
 {
     int En_Value=0xFFFF, switches_value;
 
@@ -24,7 +24,7 @@ int switchLED ( void )
     return(0);
 }
 static rt_thread_t tid_exit = RT_NULL;
-void exitApp_LED(){
+void exitApp_LED(void *parameter){
     while(1){
         if(READ_SW()>>14==1){
             rt_kprintf("准备退出LED_SWITCH\n");
@@ -33,9 +33,8 @@ void exitApp_LED(){
             // startApp();
             // resume_appStart();
             continue_next();
-            return;
+            rt_thread_delay(100);
         }
-        rt_thread_delay(100);
     }
 }
 int switch_led() {

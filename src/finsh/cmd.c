@@ -267,7 +267,7 @@ long list_thread(void)
         }
     }
     while (next != (rt_list_t *)RT_NULL);
-    rt_kprintf("list_thread已完成，请更换按钮SW15-14为10回到appStart界面\n");
+    rt_kprintf("list_thread已完成, 请置状态为sw[15,14]=10来退出\n");
     continue_next();
     return 0;
 }
@@ -336,7 +336,7 @@ long list_sem(void)
         }
     }
     while (next != (rt_list_t *)RT_NULL);
-    rt_kprintf("list_sem已完成，请更换按钮SW15-14为10回到appStart界面\n");
+    rt_kprintf("list_sem已完成, 请置状态为sw[15,14]=10来退出\n");
     continue_next();
     return 0;
 }
@@ -403,7 +403,7 @@ long list_event(void)
         }
     }
     while (next != (rt_list_t *)RT_NULL);
-    rt_kprintf("list_sem已完成，请更换按钮SW15-14为10回到appStart界面\n");
+    rt_kprintf("list_sem已完成, 请置状态为sw[15,14]=10来退出\n");
     continue_next();
     return 0;
 }
@@ -479,7 +479,7 @@ long list_mutex(void)
         }
     }
     while (next != (rt_list_t *)RT_NULL);
-    rt_kprintf("list_mutex已完成，请更换按钮SW15-14为10回到appStart界面\n");
+    rt_kprintf("list_mutex已完成, 请置状态为sw[15,14]=10来退出\n");
     continue_next();
     return 0;
 }
@@ -552,7 +552,7 @@ long list_mailbox(void)
         }
     }
     while (next != (rt_list_t *)RT_NULL);
-    rt_kprintf("list_mailbox已完成，请更换按钮SW15-14为10回到appStart界面\n");
+    rt_kprintf("list_mailbox已完成, 请置状态为sw[15,14]=10来退出\n");
     continue_next();
     return 0;
 }
@@ -621,7 +621,7 @@ long list_msgqueue(void)
         }
     }
     while (next != (rt_list_t *)RT_NULL);
-    rt_kprintf("list_msgqueue已完成，请更换按钮SW15-14为10回到appStart界面\n");
+    rt_kprintf("list_msgqueue已完成, 请置状态为sw[15,14]=10来退出\n");
     continue_next();
     return 0;
 }
@@ -680,7 +680,7 @@ long list_memheap(void)
         }
     }
     while (next != (rt_list_t *)RT_NULL);
-    rt_kprintf("list_memheap已完成，请更换按钮SW15-14为10回到appStart界面\n");
+    rt_kprintf("list_memheap已完成, 请置状态为sw[15,14]=10来退出\n");
     continue_next();
     return 0;
 }
@@ -762,7 +762,7 @@ long list_mempool(void)
         }
     }
     while (next != (rt_list_t *)RT_NULL);
-    rt_kprintf("list_mempool已完成，请更换按钮SW15-14为10回到appStart界面\n");
+    rt_kprintf("list_mempool已完成, 请置状态为sw[15,14]=10来退出\n");
     continue_next();
     return 0;
 }
@@ -828,7 +828,7 @@ long list_timer(void)
     while (next != (rt_list_t *)RT_NULL);
 
     rt_kprintf("current tick:0x%08x\n", rt_tick_get());
-    rt_kprintf("list_timer已完成，请更换按钮SW15-14为10回到appStart界面\n");
+    rt_kprintf("list_timer已完成, 请置状态为sw[15,14]=10来退出\n");
     continue_next();
     return 0;
 }
@@ -926,7 +926,7 @@ long list_device(void)
         }
     }
     while (next != (rt_list_t *)RT_NULL);
-    rt_kprintf("list_device已完成，请更换按钮SW15-14为10回到appStart界面\n");
+    rt_kprintf("list_device已完成, 请置状态为sw[15,14]=10来退出\n");
     continue_next();
     return 0;
 }

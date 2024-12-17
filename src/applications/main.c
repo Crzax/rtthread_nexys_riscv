@@ -122,7 +122,7 @@ void ColourToGrey(RGB Colour[N][M], unsigned char Grey[N][M]) {
             Grey[i][j] =  ColourToGrey_Pixel(Colour[i][j].R, Colour[i][j].G, Colour[i][j].B); 
 }
 
-void color2grey(void) {
+void color2grey(void *parameter) {
     initColourImage(ColourImage);
     
     ColourToGrey(ColourImage,GreyImage);
@@ -153,7 +153,7 @@ void color2grey_MSH(void) {
 
 MSH_CMD_EXPORT(color2grey_MSH, color to grey);
 
-void blur_filter(void) {
+void blur_filter(void *parameter) {
     ImageFilter(ColourImage,FilterColourImage);
     
     ColourToGrey(ColourImage,GreyImage);
