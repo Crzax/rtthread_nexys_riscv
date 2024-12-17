@@ -15,6 +15,7 @@
         "typeinfo": "cpp",
         "rtdebug.h": "c",
         "bsp_printf.h": "c",
-        "bsp_mem_map.h": "c"
+        "bsp_mem_map.h": "c",
+        "type_traits": "cpp"
     }
 }
