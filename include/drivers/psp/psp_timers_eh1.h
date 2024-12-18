@@ -27,6 +27,7 @@
 /**
 * include files
 */
+#include <psp_types.h>
 
 /**
 * definitions

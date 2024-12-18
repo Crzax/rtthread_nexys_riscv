@@ -22,6 +22,7 @@
 #include <rthw.h>
 #include <rtthread.h>
 #include <rtatomic.h>
+#include <psp_timers_eh1.h>
 
 #ifdef RT_USING_SMP
 #define rt_tick rt_cpu_index(0)->tick
@@ -31,6 +32,12 @@ static volatile rt_atomic_t rt_tick = 0;
 
 #ifndef __on_rt_tick_hook
     #define __on_rt_tick_hook()          __ON_HOOK_ARGS(rt_tick_hook, ())
+#endif
+
+#define RT_USING_PSP_INTERRUPTS
+#ifdef RT_USING_PSP_INTERRUPTS
+    #define SYSTEM_TIMER E_MACHINE_TIMER
+    #define TICK_PERIOD_CYCLES 5000 // 每个滴答周期的计数值
 #endif
 
 #if defined(RT_USING_HOOK) && defined(RT_HOOK_USING_FUNC_PTR)
@@ -69,7 +76,11 @@ void rt_tick_sethook(void (*hook)(void))
 rt_tick_t rt_tick_get(void)
 {
     /* return the global tick */
-    return (rt_tick_t)rt_atomic_load(&(rt_tick));
+#ifdef RT_USING_PSP_INTERRUPTS
+    return (rt_tick_t)(pspTimerCounterGet(SYSTEM_TIMER) / TICK_PERIOD_CYCLES);
+#else
+        return (rt_tick_t)rt_atomic_load(&(rt_tick));
+#endif
 }
 RTM_EXPORT(rt_tick_get);
 
@@ -80,6 +91,11 @@ RTM_EXPORT(rt_tick_get);
  */
 void rt_tick_set(rt_tick_t tick)
 {
+#ifdef RT_USING_PSP_INTERRUPTS
+    u32_t uiPeriodCycles = tick * TICK_PERIOD_CYCLES;
+    extern void pspTimerSetupMachineTimer(u32_t uiPeriodCycles);
+    pspTimerSetupMachineTimer(uiPeriodCycles);
+#endif
     rt_atomic_store(&(rt_tick), tick);
 }
 

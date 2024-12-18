@@ -39,6 +39,8 @@ int rt_hw_timer_init(void)
     pspInterruptsSetVectorTableAddress(&psp_vect_table);
     pspRegisterInterruptHandler((pspInterruptHandler_t)rt_hw_timer_isr, E_MACHINE_TIMER_CAUSE);
 
+    // pspEnableInterruptNumberMachineLevel(D_PSP_INTERRUPTS_MACHINE_TIMER); // 启用定时器中断
+
     return 0;
 }
 
