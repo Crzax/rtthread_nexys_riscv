@@ -24,6 +24,8 @@
         "stdint.h": "c",
         "psp_types.h": "c",
         "psp_attributes.h": "c",
-        "bsp_external_interrupts.h": "c"
+        "bsp_external_interrupts.h": "c",
+        "psp_timers_eh1.h": "c",
+        "rtdef.h": "c"
     }
 }

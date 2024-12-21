@@ -37,7 +37,7 @@ static volatile rt_atomic_t rt_tick = 0;
 #define RT_USING_PSP_INTERRUPTS
 #ifdef RT_USING_PSP_INTERRUPTS
     #define SYSTEM_TIMER E_MACHINE_TIMER
-    #define TICK_PERIOD_CYCLES 5000 // 每个滴答周期的计数值
+    #define TICK_PERIOD_CYCLES (D_CLOCK_RATE / RT_TICK_PER_SECOND)  // 每个滴答周期的计数值
 #endif
 
 #if defined(RT_USING_HOOK) && defined(RT_HOOK_USING_FUNC_PTR)
@@ -91,11 +91,6 @@ RTM_EXPORT(rt_tick_get);
  */
 void rt_tick_set(rt_tick_t tick)
 {
-#ifdef RT_USING_PSP_INTERRUPTS
-    u32_t uiPeriodCycles = tick * TICK_PERIOD_CYCLES;
-    extern void pspTimerSetupMachineTimer(u32_t uiPeriodCycles);
-    pspTimerSetupMachineTimer(uiPeriodCycles);
-#endif
     rt_atomic_store(&(rt_tick), tick);
 }
 

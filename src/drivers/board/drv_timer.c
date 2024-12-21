@@ -28,9 +28,15 @@
 void rt_hw_timer_isr(void)
 {
     pspDisableInterruptNumberMachineLevel(D_PSP_INTERRUPTS_MACHINE_TIMER);
+    /* enter interrupt */
+    rt_interrupt_enter();
 
     rt_tick_increase();
 
+    // rt_kprintf(rt_tick_get() % 100 == 0 ? "Hello RT-Thread!\n" : "Hello RT-Thread!\n");
+    
+    /* leave interrupt */
+    rt_interrupt_leave();
     pspEnableInterruptNumberMachineLevel(D_PSP_INTERRUPTS_MACHINE_TIMER);
 }
 
@@ -38,6 +44,8 @@ int rt_hw_timer_init(void)
 {
     pspInterruptsSetVectorTableAddress(&psp_vect_table);
     pspRegisterInterruptHandler((pspInterruptHandler_t)rt_hw_timer_isr, E_MACHINE_TIMER_CAUSE);
+    extern void pspTimerSetupMachineTimer(u32_t uiPeriodMseconds);
+    pspTimerSetupMachineTimer(D_CLOCK_RATE);
 
     // pspEnableInterruptNumberMachineLevel(D_PSP_INTERRUPTS_MACHINE_TIMER); // 启用定时器中断
 

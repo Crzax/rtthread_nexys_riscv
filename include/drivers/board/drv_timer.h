@@ -10,7 +10,7 @@
 
 #ifndef DRV_TIMER_H__
 #define DRV_TIMER_H__
-
+#define TICK_PERIOD_CYCLES (D_CLOCK_RATE / RT_TICK_PER_SECOND)  // 每个滴答周期的计数值
 void timer_init(int timer, unsigned int preload);
 void timer_clear_pending(int timer);
 
