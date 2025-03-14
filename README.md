@@ -1,3 +1,56 @@
+# 基于RT-Thread5.10移植Nexys A7 FPGA实现图像处理应用
+## 项目简介
+该项目实现了将RT-Thread 5.10内核移植到 Nexys A7 FPGA开发板(RISC-V架构)上，在该系统上实现了Shell以及图像处理程序。该项目同样是武汉大学嵌入式系统课件实验。同时添加了RT-thread官方文档的测试用例，它可以通过终端调用。
+
+## 环境配置
+### 平台安装
+该项目需要借助VScode的PlatformIO平台，使用前需要在VSCode安装PlatformIO，准备好RISC-V平台，我们借助`swervolf_nexys`内核。
+### 内存布局修改
+同时用该项目下的`link.lds`替换`C:\Users\<YourName>\.platformio\packages\framework-wd-riscv-sdk\board\nexys_a7_eh1`下对应文件，注意路径中的`<YourName>`要替换成你的Windows电脑用户名。
+
+## 项目结构
+- asset: 资源文件夹，包括图像处理的源图片，以及图片数组化，dat文件转化成bmp的代码文件。
+- include: 头文件，包括psp，板载文件，和RT-Thread文件。
+- src: 源文件，包括板载文件，驱动文件和RT-Thread文件等。
+  在该目录下有·applications·文件夹，这里添加了官方测试用例和图像处理程序源文件。
+
+## 使用流程
+1. 点击`asset`目录下的`image_to_c.exe`，将`asset/input.png`转换成`src/applications/output.c`里的C语言数组。
+
+2. 启动项目，连接到板子的UART串口，选择波特率为115200，可以看到终端输出：
+
+![终端输出](./figures/terminal.png)
+
+3. 使用help命令：
+
+![help输出](./figures/help.png)
+
+确实能找到我们实现的图像处理程序。
+
+4. 调用命令处理图像，相关信息：
+
+![处理图像](./figures/call.png)
+
+5. 使用dump命令，导出内存的灰度图数组和高斯模糊数组：
+
+![dump](./figures/dump.png)
+	
+6. 最后点击`asset`目录下`to_bmp.dat`会自动调用`dat2bmp.exe`将两个dat转成bmp文件(分别是单通道和三通道的)。
+
+7. 最终效果：原图为：
+
+![ori](./asset/input.png) 
+
+灰度图：
+
+![grey](./asset/GreyImage.bmp)
+
+高斯模糊图片：
+
+![gau](./asset/FilterColourImage.bmp)
+ 	
+下面是默认的PlatformIO项目的启动说明:
+
 How to build PlatformIO based project
 =====================================
 
