@@ -32,7 +32,11 @@
 ![处理图像](./figures/call.png)
 
 5. 使用dump命令，导出内存的灰度图数组和高斯模糊数组：
-
+```
+cd asset
+dump value GreyImage.dat GreyImage
+dump value FilterColourImage.dat FilterColourImage
+```
 ![dump](./figures/dump.png)
 	
 6. 最后点击`asset`目录下`to_bmp.dat`会自动调用`dat2bmp.exe`将两个dat转成bmp文件(分别是单通道和三通道的)。
