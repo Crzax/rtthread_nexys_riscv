@@ -1,5 +1,6 @@
 #include <rtthread.h>
 #include "appdef.h"
+#include "utils.h"
 
 /* 指向互斥量的指针 */
 static rt_mutex_t dynamic_mutex = RT_NULL;

@@ -8,6 +8,7 @@
 #include "psp_api.h"
 #include <rtthread.h>
 #include "appdef.h"
+#include "utils.h"
 
 typedef struct {
     unsigned char R;
@@ -27,15 +28,6 @@ typedef struct {
     extern unsigned char SIZE_256x256[];
 #endif
 
-void continue_next(void) {
-    rt_kprintf("请置状态为sw[15,14]=10来退出\n");
-    while (1) { 
-        unsigned int value = READ_SW();
-        if (((value >> 15) & 1) == 1 && ((value >> 14) & 1) == 0) {
-            return;
-        }
-    }
-}
 
 RGB ColourImage[N][M];
 unsigned char GreyImage[N][M];

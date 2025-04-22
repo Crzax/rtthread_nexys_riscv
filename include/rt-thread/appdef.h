@@ -3,7 +3,6 @@
 #define THREAD_STACK_SIZE       512
 #define THREAD_TIMESLICE        5
 
-void continue_next(void);
 #ifdef __cplusplus
 int dynmem_sample(void);
 int interrupt_sample(void);

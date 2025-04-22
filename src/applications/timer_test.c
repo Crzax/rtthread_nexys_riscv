@@ -1,6 +1,7 @@
 #include <rtthread.h>
 #include "board.h"
 #include "appdef.h"
+#include "utils.h"
 
 /* 定时器的控制块 */
 static rt_timer_t timer1;

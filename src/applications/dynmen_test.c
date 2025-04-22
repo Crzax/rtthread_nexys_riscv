@@ -1,5 +1,6 @@
 #include <rtthread.h>
 #include "appdef.h"
+#include "utils.h"
 
 rt_thread_t tid = RT_NULL;
 /* 线程入口 */

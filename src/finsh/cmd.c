@@ -41,6 +41,8 @@
 #ifdef RT_USING_FINSH
 #include <finsh.h>
 #include <appdef.h>
+#include "utils.h"
+
 #define LIST_FIND_OBJ_NR 8
 
 static long clear(void)

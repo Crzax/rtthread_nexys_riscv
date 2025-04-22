@@ -1,5 +1,6 @@
 #include <rtthread.h>
 #include "appdef.h"
+#include "utils.h"
 
 /* 指向信号量的指针 */
 static rt_sem_t dynamic_sem = RT_NULL;

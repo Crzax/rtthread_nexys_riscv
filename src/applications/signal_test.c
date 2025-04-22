@@ -1,5 +1,6 @@
 #include <rtthread.h>
 #include "appdef.h"
+#include "utils.h"
 
 static rt_thread_t tid1 = RT_NULL;
 

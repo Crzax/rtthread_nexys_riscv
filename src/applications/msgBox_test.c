@@ -1,5 +1,6 @@
 #include <rtthread.h>
 #include "appdef.h"
+#include "utils.h"
 
 /* 邮箱控制块 */
 static struct rt_mailbox mb;
